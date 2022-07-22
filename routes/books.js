@@ -2,80 +2,95 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
 
-/*router.get("/", async (req,res) => {
+ /** 
+   * @swagger
+   * /books:
+   *  get:
+   *    tags:
+   *      - API Requests
+   *    summary: Get all books
+   *    responses:
+   *      '200':
+   *        description: Success
+   */
+
+//Get
+router.get('/', async (req,res) => {
     try{
         const books = await Book.find()
-            res.json(books)
-        }catch(err){
-            res.json({message: err})
-        }
-  });
-
-router.delete('/:bookId', async (req,res)=> {
-    try{
-        const deletedBook = await Book.remove({ _id: req.params.bookId})
-        res.json(deletedBook)
+        res.json(books)
     }catch(err){
         res.json({message: err})
     }
-})
-
-/*router.post("/:id", async (req, res) => {
-    try{
-    const createBook = await Book.create(req.body)
-    res.json(createBook)
-    const insertBook = await Author.findOneAndUpdate({ _id: req.params.id }, {$push: {book: createBook._id}}, { new: true });
-    res.json(insertBook)
-    }catch(err){
-        res.json({message: err})
-    }
-});*/
-
-/*router.post("/:id", async (req, res) => {
-    try{
-    const createBook = Book.create(req.body)
-    res.json(createBook)
-    const insertBook = Author.findOneAndUpdate({ _id: req.params.id }, {$push: {books: createBook._id}}, { new: true });
-    res.json(insertBook)
-    }catch(err){
-        res.json({message: err})
-    }
-  });
-*/
-//Post
-/*router.post('/', async (req,res) => {
-    const book = new Book({
-        title: req.body.title,
-        ISBN: req.body.ISBN,
-        price: req.body.price
-    });
-    try{
-        const bookSaved = await book.save()
-        res.json(bookSaved);
-    }catch(err){
-        res.json({message: err})}
 });
 
-//Delete
-router.delete('/:postId', async (req,res)=> {
-    try{
-        const deletedBook = await Book.remove({ _id: req.params.postId})
-        res.json(deletedBook)
-    }catch(err){
-        res.json({message: err})
-    }
-})
-*/
+
+/**
+ * @swagger
+ * /books/{id}:
+ *  patch:
+ *    tags:
+ *      - API Requests
+ *    summary: update a book
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        type: string
+ *        description: book ID
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object  
+ *            properties:
+ *              title:
+ *                type: string
+ *              ISBN:
+ *                type: integer
+ *              price:
+ *                type: integer
+ *    responses:
+ *      '200':
+ *        description: OK
+ */
+
 //Update
-/*router.patch('/:postId', async (req,res) => {
+router.patch('/:id', async (req,res) => {
     try{
         const updatedBook = await Book.updateMany(
-            {_id: req.params.postId},
-            {$set: { title: req.body.title, ISBN: req.body.ISBN, price: req.body.price}});
+            {_id: req.params.id},
+            {$set: { title: req.body.title, ISBN: req.body.ISBN, price: req.body.price}})
         res.json(updatedBook);
     }catch(err){
         res.json({message: err});
     }
 })
-*/
+
+/**
+ * @swagger
+ * /books/{id}:
+ *  delete:
+ *    tags:
+ *      - API Requests
+ *    summary: delete a book
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        type: string
+ *        description: book ID
+ *    responses:
+ *      '200':
+ *        description: OK
+ */
+
+//Delete
+ router.delete('/:id', async (req,res)=> {
+    try{
+        const deletedBook = await Book.remove({ _id: req.params.id})
+        res.json(deletedBook)
+    }catch(err){
+        res.json({message: err})
+    }
+  })
+
 module.exports = router;
