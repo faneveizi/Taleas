@@ -1,5 +1,5 @@
 const express = require('express');
-var Author = require("../models/Author");
+const Author = require("../models/Author");
 const Book = require('../models/Book');
 const router = express.Router();
 
@@ -11,7 +11,7 @@ const router = express.Router();
     }catch(err){
         res.json({message: err})
     }
-});*/
+});
 //GET authors
 router.get("/", async (req,res) => {
     try{
@@ -21,8 +21,9 @@ router.get("/", async (req,res) => {
             res.json({message: err})
         }
 });
+
 //POST authors
-router.post('/', async (req, res) => {
+/*router.post('/', async (req, res) => {
     try{
     const createAuthor = await Author.create(req.body)
       res.json(createAuthor) 
@@ -32,23 +33,27 @@ router.post('/', async (req, res) => {
     }
 });
 
-//POST new books to authors by ID
-router.post("/:id", async (req, res) => {
-    try{
-        await Book.create(req.body)
-    }catch(err){
-        res.json({message: err})
-    }
-    try{
-        const insertBook = await Author.findOneAndUpdate({ _id: req.params.id }, {$push: {books: createBook._id}}, { new: true });
-    res.json(insertBook)
-    }catch(err){
-        res.json({message: err})
-    }
-  });
+router.post('/:id', async(req,res)=>{
+    Book.create(req.body).then(function(createdBook){
+        return Author.findOneAndUpdate({_id: req.params.id},
+            {
+                $push: {books: createdBook._id}},{new:true});
+    }).then(function(dbUsers){
+        res.json(dbUsers);
+    }).catch(function(err){
+        res.json(err);
+    });
+});
 
+router.get('/:authorId', async (req,res)=>{
+    Author.findOne({_id: req.params.authorId}).populate('books').then(function(dbAuthors){
+        res.json(dbAuthors);
+    }).catch(function(err){
+        res.json(err);
+    });
+});
 //Get authors by ID
-/*router.get("/:id", function(req, res) {
+router.get("/:id", function(req, res) {
     // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
     Author.findOne({ _id: req.params.id })
       // ..and populate all of the notes associated with it
@@ -62,20 +67,21 @@ router.post("/:id", async (req, res) => {
         res.json(err);
       });
   });
-*/
+
   //Update authors
 router.patch('/:authorId', async (req,res) => {
     try{
         const updatedAuthor = await Author.updateMany(
             {_id: req.params.authorId},
             {$set: { name: req.body.name, age: req.body.age}})
-                /*book: [{
-                    title: req.body.book.title, ISBN: req.body.book.ISBN, price: req.body.book.price}]}});*/
+                book: [{
+                    title: req.body.book.title, ISBN: req.body.book.ISBN, price: req.body.book.price}]}});
         res.json(updatedAuthor);
     }catch(err){
         res.json({message: err});
     }
 })
+
 //delete authors
 router.delete('/:authorId', async (req,res)=> {
     try{
@@ -86,7 +92,7 @@ router.delete('/:authorId', async (req,res)=> {
     }
 })
 
-/*router.post("/:id", function(req, res) {
+router.post("/:id", function(req, res) {
     // Create a new note and pass the req.body to the entry
     Book.create(req.body)
       .then(function(book) {
@@ -104,7 +110,7 @@ router.delete('/:authorId', async (req,res)=> {
         res.json(err);
       });
   });
-*/
+
 
 router.get("/:id", async (req, res) => {
     try{
@@ -124,11 +130,11 @@ router.get("/:id", async (req, res) => {
     res.json(authorWithBooks);
     }catch(err){
         res.json({message: err});
-    }*/
+    }
 }); 
 
 //Post
-/*router.post('/', async (req,res) => {
+router.post('/', async (req,res) => {
     const authors = new Author({
         name: req.body.name,
         age: req.body.age,
@@ -143,7 +149,6 @@ router.get("/:id", async (req, res) => {
         res.json(authorSaved);
     }catch(err){
         res.json({message: err})}
-});*/
-
-
+});
+*/
 module.exports = router;
