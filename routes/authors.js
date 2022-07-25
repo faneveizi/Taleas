@@ -84,17 +84,19 @@ router.post('/', async (req, res) => {
  *        description: OK
  */
 
-router.post('/:id', async(req,res)=>{
-    Book.create(req.body).then(function(createdBook){
-        return Author.findOneAndUpdate({_id: req.params.id},
-            {
-                $push: {books: createdBook._id}},{new:true});
-    }).then(function(dbUsers){
-        res.json(dbUsers);
-    }).catch(function(err){
-        res.json(err);
-    });
-});
+router.post("/:id", async (req, res) => {
+    try {
+      const createBook = await Book.create(req.body);
+      const insertedBook = await Author.findOneAndUpdate(
+        { _id: req.params.id },
+        { $push: { books: createBook._id } },
+        { new: true }
+      );
+      res.json(insertedBook);
+    } catch (error) {
+      res.json(error);
+    }
+  });
 
 
 /**
@@ -129,8 +131,6 @@ router.post('/:id', async(req,res)=>{
         const updatedAuthor = await Author.updateMany(
             {_id: req.params.authorId},
             {$set: { name: req.body.name, age: req.body.age}})
-                /*book: [{
-                    title: req.body.book.title, ISBN: req.body.book.ISBN, price: req.body.book.price}]}});*/
         res.json(updatedAuthor);
     }catch(err){
         res.json({message: err});
