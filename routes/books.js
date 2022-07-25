@@ -91,6 +91,6 @@ router.patch('/:id', async (req,res) => {
     }catch(err){
         res.json({message: err})
     }
-  })
+})
 
 module.exports = router;
