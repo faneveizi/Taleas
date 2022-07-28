@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose')
 const app = express();
+const cors = require('cors')
 const Book = require("./models/Book")
 const Author = require("./models/Author");
 const swaggerJsDoc = require('swagger-jsdoc')
@@ -8,6 +9,7 @@ const swaggerUI = require('swagger-ui-express')
 require('dotenv/config')
 app.use(express.urlencoded())
 app.use(express.json())
+app.use(cors())
 
 const booksRoute = require('./routes/books')
 const authorsRoute = require('./routes/authors');

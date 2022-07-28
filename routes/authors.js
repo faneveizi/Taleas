@@ -23,6 +23,15 @@ router.get("/", async (req,res) => {
         }
 });
 
+router.get("/:id", async (req,res) => {
+    try{
+        const authors = await Author.findById(req.params.id)
+            res.json(authors)
+        }catch(err){
+            res.json({message: err})
+        }
+});
+
 /**
  * @swagger
  * /authors:
@@ -126,10 +135,10 @@ router.post("/:id", async (req, res) => {
  *        description: OK
  */
 
- router.patch('/:authorId', async (req,res) => {
+ router.put('/put/:id', async (req,res) => {
     try{
         const updatedAuthor = await Author.updateMany(
-            {_id: req.params.authorId},
+            {_id: req.params.id},
             {$set: { name: req.body.name, age: req.body.age}})
         res.json(updatedAuthor);
     }catch(err){
@@ -155,7 +164,7 @@ router.post("/:id", async (req, res) => {
  */
 
 //Delete
- router.delete('/:id', async (req,res)=> {
+ router.delete('/delete/:id', async (req,res)=> {
     try{
         const deletedAuthor = await Author.remove({ _id: req.params.id})
         res.json(deletedAuthor)

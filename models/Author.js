@@ -10,11 +10,11 @@ const Schema = require('mongoose');
 
 const authorsSchema = mongoose.Schema({
     name: String,
-    age: Number, 
-    books: [{
+    age: Number 
+    /*books: [{
         type: Schema.Types.ObjectId,
         ref: "Books"
-    }]
+    }]*/
 });
  
 //var Books = mongoose.model('Books',bookSchema);//
